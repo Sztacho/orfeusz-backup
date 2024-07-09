@@ -1,0 +1,40 @@
+{% extends 'admin/base.admin.html.twig' %}
+
+{% block body %}
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="d-flex flex-column justify-content-center align-items-center w-50 container">
+            <div>
+                <p class="login">Login</p>
+                <p class="login-text">Logowanie do serwisu Orfeusz Subs</p>
+                <div class="login-gap"></div>
+                {{ form_start(form) }}
+                <label>
+                    Email
+                    {{ form_widget(form._username, {attr: {placeholder: "Np. admin@admin.pl", class: 'form-control'}}) }}
+                </label>
+                <label>
+                    Hasło
+                    {{ form_widget(form._password, {attr: {placeholder: "Min. 8 znaków",  class: 'form-control'}}) }}
+                </label>
+
+                <label>
+                    {{ form_widget(form._remember_me, {label: 'Zapamiętaj mnie'}) }}
+                    Zapamiętaj mnie
+
+                </label>
+                {{ form_widget(form.logIn, {label: 'Zaloguj', attr: {class: 'w-100 btn-primary btn'}}) }}
+                {{ form_end(form) }}
+                <p class="copyright">©2022 Orfeusz-Subs.pl - Wszelkie prawa zastrzeżone.</p>
+            </div>
+            {% if error %}
+                <div class="alert-danger alert w-100">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+        </div>
+
+        <div class="vh-100 w-50 gradient d-flex flex-column justify-content-center align-items-center">
+            <h1>Orfeusz Subs</h1>
+            <h2>Tłumaczenia fanowskie anime</h2>
+            <br>
+        </div>
+    </div>
+{% endblock %}

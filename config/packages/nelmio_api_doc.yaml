@@ -1,0 +1,20 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: Orfeusz API
+            description: API of https://www.orfeusz-subs.pl
+            version: 1.0.0
+        components:
+            securitySchemes:
+                Token:
+                    type: apiKey
+                    name: x-auth-token
+                    description: "JWT TOKEN"
+                    in: header
+        security:
+            Token: [ ]
+
+    areas:
+        path_patterns:
+            - ^/api(?!/doc)
+

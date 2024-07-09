@@ -1,0 +1,54 @@
+doctrine:
+    dbal:
+        url: '%env(resolve:DATABASE_URL)%'
+    orm:
+        dql:
+            datetime_functions:
+                DATE_FORMAT: DoctrineExtensions\Query\Mysql\DateFormat
+                DAY: DoctrineExtensions\Query\Mysql\Day
+                MONTH: DoctrineExtensions\Query\Mysql\Month
+                YEAR: DoctrineExtensions\Query\Mysql\Year
+                NOW: DoctrineExtensions\Query\Mysql\Now
+                JSON_CONTAINS: DoctrineExtensions\Query\Mysql\JsonContains
+        auto_generate_proxy_classes: true
+        enable_lazy_ghost_objects: true
+        proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        auto_mapping: true
+        mappings:
+            App:
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Entity'
+                prefix: 'App\Entity'
+                alias: App
+
+        query_cache_driver:
+            type: pool
+            pool: doctrine.system_cache_pool
+        result_cache_driver:
+            type: pool
+            pool: doctrine.result_cache_pool
+
+        second_level_cache:
+            enabled: true
+            log_enabled: true
+            region_cache_driver:
+                type: pool
+                pool: doctrine.second_level_cache_pool
+            regions:
+                anime:
+                    cache_driver:
+                        type: pool
+                        pool: doctrine.second_level_cache_pool
+                    type: filelock
+                    lock_path: '%kernel.cache_dir%/doctrine/orm/lock'
+
+framework:
+    cache:
+        pools:
+            doctrine.result_cache_pool:
+                adapter: cache.app
+            doctrine.system_cache_pool:
+                adapter: cache.system
+            doctrine.second_level_cache_pool:
+                adapter: cache.app

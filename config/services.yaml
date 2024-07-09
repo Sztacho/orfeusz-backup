@@ -1,0 +1,18 @@
+parameters:
+    clientId: '%env(DISCORD_CLIENT_ID)%'
+    clientSecret: '%env(DISCORD_CLIENT_SECRET)%'
+    redirectUri: '%env(DISCORD_REDIRECT_URI)%'
+    uploadPath: 'public/assets/images'
+    basePath: '/assets/images/'
+
+services:
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'

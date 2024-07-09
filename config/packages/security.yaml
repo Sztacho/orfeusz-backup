@@ -1,0 +1,61 @@
+security:
+  role_hierarchy:
+    ROLE_ADMIN: ROLE_USER
+    ROLE_SUPER_ADMIN: [ ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH, ROLE_SUPER_ADMIN, ROLE_ANIME, ROLE_EPISODE, ROLE_PLAYER, ROLE_CREW ]
+    ROLE_ANIME: [ROLE_ANIME_VIEW, ROLE_ANIME_ADD, ROLE_ANIME_EDIT, ROLE_ANIME_DELETE]
+    ROLE_EPISODE: [ROLE_EPISODE_VIEW, ROLE_EPISODE_ADD, ROLE_EPISODE_EDIT, ROLE_EPISODE_DELETE]
+    ROLE_PLAYER: [ROLE_PLAYER_VIEW, ROLE_PLAYER_ADD, ROLE_PLAYER_EDIT, ROLE_PLAYER_DELETE]
+    ROLE_CREW: [ROLE_CREW_TRANSLATOR, ROLE_CREW_ADMINISTRATOR, ROLE_CREW_DEVELOPER, ROLE_CREW_UPLOADER, ROLE_CREW_COPY_READER, ROLE_CREW_MODERATOR]
+
+  password_hashers:
+    Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+  providers:
+    app_user_provider:
+      entity:
+        class: App\Entity\User
+        property: email
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+
+    api:
+      pattern: ^/api/
+      custom_authenticators:
+        - App\Security\JWTTokenAuthenticator
+      logout:
+        path: logout
+
+    admin:
+      pattern: ^/admin
+      entry_point: form_login
+      form_login:
+        provider: app_user_provider
+        login_path: admin_login
+        check_path: admin_login
+        default_target_path: admin
+      logout:
+        path: admin_logout
+        target: admin_login
+      remember_me:
+        secret: '%kernel.secret%'
+        lifetime: 604800
+        always_remember_me: true
+
+
+  access_control:
+    - { path: ^/api/user/crew, roles: PUBLIC_ACCESS }
+    - { path: ^/api/user, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/api/liveChat, roles: IS_AUTHENTICATED_FULLY, methods: ['POST'] }
+    - { path: ^/admin/login, roles: PUBLIC_ACCESS }
+    - { path: ^/admin/logout, roles: ROLE_ADMIN }
+    - { path: ^/admin, roles: ROLE_ADMIN }
+
+when@test:
+  security:
+    password_hashers:
+      Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+        algorithm: auto
+        cost: 4
+        time_cost: 3
+        memory_cost: 10
